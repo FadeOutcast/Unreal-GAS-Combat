@@ -1,0 +1,25 @@
+count=0
+commitCount=0
+echo 'Enter number of changes per push'
+read max
+echo 'Enter commit name'
+read commitName
+touch "changes.txt"
+git status -u -s > changes.txt
+while read -r line;
+do
+echo ${line:3}
+git add ${line:3}
+count=$((count+1))
+if [ $count == $max ]; then
+git commit -m $commitName$commitCount
+git push -u origin master
+echo 'Changes pushed'
+count=0
+commitCount=$((commitCount+1))
+fi
+done < "changes.txt"
+git commit -m $commitName$commitCount
+git push origin main
+echo 'Changes pushed'
+echo 'Operation Complete'
